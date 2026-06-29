@@ -1,0 +1,15 @@
+# Netlify build / function configuration for the FASTSIGNS Site Survey form.
+#
+# Deploy the bundled single-file form as index.html in this same folder
+# (rename "FASTSIGNS Site Survey Form (offline).html" → "index.html"),
+# or deploy the multi-file project (Site Survey Form.html + survey/).
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Friendly URL: /submit-survey → the function
+[[redirects]]
+  from = "/.netlify/functions/submit-survey"
+  to = "/.netlify/functions/submit-survey"
+  status = 200
