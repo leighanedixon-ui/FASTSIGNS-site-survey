@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FASTSIGNS Â· Survey Dashboard</title>
+<title>FASTSIGNS - Survey Dashboard</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
 }
 
-/* ââ Gate ââ */
+/* --- Gate --- */
 #gate {
   position: fixed; inset: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
@@ -58,7 +58,7 @@ body {
 .gate-btn:hover { opacity: .88; }
 .gate-err { color: var(--red); font-size: .8rem; margin-top: .75rem; min-height: 1.1em; }
 
-/* ââ Header ââ */
+/* --- Header --- */
 header {
   background: var(--dark);
   padding: .875rem 2rem;
@@ -69,7 +69,7 @@ header {
 .hd-logo em { color: var(--red); font-style: normal; }
 .hd-date { font-size: .78rem; color: rgba(255,255,255,.45); }
 
-/* ââ Stats ââ */
+/* --- Stats --- */
 .stats {
   display: grid; grid-template-columns: repeat(3,1fr); gap: .875rem;
   padding: 1.5rem 2rem 1rem;
@@ -82,7 +82,7 @@ header {
 .stat-val { font-size: 2rem; font-weight: 800; color: var(--dark); line-height: 1.15; }
 .stat-sub { font-size: .72rem; color: var(--gray); margin-top: .2rem; }
 
-/* ââ Controls ââ */
+/* --- Controls --- */
 .controls {
   padding: 0 2rem .875rem;
   display: flex; gap: .625rem; flex-wrap: wrap; align-items: center;
@@ -114,7 +114,7 @@ input.date-input:focus { border-color: var(--red); }
 }
 .btn-clear:hover { border-color: var(--red); color: var(--red); }
 
-/* ââ Table ââ */
+/* --- Table --- */
 .tbl-wrap { padding: 0 2rem 2rem; }
 .tbl-card {
   background: var(--white); border-radius: 10px;
@@ -153,7 +153,7 @@ tr:hover td { background: #FAFAFA; }
 .btn-pdf  { background: var(--red);  color: white; }
 .btn-json { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
 
-/* ââ Empty / Loading ââ */
+/* --- Empty / Loading --- */
 .empty td { text-align: center; padding: 3rem; color: var(--gray); }
 .spin {
   width: 28px; height: 28px; margin: 0 auto .875rem;
@@ -162,7 +162,7 @@ tr:hover td { background: #FAFAFA; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ââ Modal ââ */
+/* --- Modal --- */
 #modal {
   display: none; position: fixed; inset: 0; z-index: 100;
   background: rgba(0,0,0,.55);
@@ -194,7 +194,7 @@ tr:hover td { background: #FAFAFA; }
 }
 #survey-frame { flex: 1; border: none; width: 100%; display: none; }
 
-/* ââ Responsive ââ */
+/* --- Responsive --- */
 @media (max-width: 680px) {
   .stats { grid-template-columns: 1fr 1fr; }
   header, .stats, .controls, .tbl-wrap { padding-left: 1rem; padding-right: 1rem; }
@@ -208,7 +208,7 @@ tr:hover td { background: #FAFAFA; }
 </head>
 <body>
 
-<!-- ââ Password Gate ââ -->
+<!-- Password Gate -->
 <div id="gate">
   <div class="gate-card">
     <div class="gate-wordmark">FASTSIGNS</div>
@@ -219,7 +219,7 @@ tr:hover td { background: #FAFAFA; }
   </div>
 </div>
 
-<!-- ââ App ââ -->
+<!-- App -->
 <div id="app" style="display:none">
   <header>
     <div class="hd-logo"><em>FAST</em>SIGNS &middot; Survey Dashboard</div>
@@ -249,7 +249,7 @@ tr:hover td { background: #FAFAFA; }
       <svg class="search-ico" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="7"/><path d="m21 21-4.5-4.5"/>
       </svg>
-      <input id="q" type="text" class="ctrl-input" placeholder="Search site codeâ¦" oninput="render()" />
+      <input id="q" type="text" class="ctrl-input" placeholder="Search site code..." oninput="render()" />
     </div>
     <input id="d-from" type="date" class="date-input" onchange="render()" title="From date" />
     <input id="d-to"   type="date" class="date-input" onchange="render()" title="To date" />
@@ -281,15 +281,15 @@ tr:hover td { background: #FAFAFA; }
   </div>
 </div>
 
-<!-- ââ Survey Modal ââ -->
+<!-- Survey Modal -->
 <div id="modal">
   <div class="modal-card">
     <div class="modal-hd">
       <div class="modal-title" id="modal-title">Survey</div>
       <div class="modal-acts">
-        <button class="btn btn-pdf" onclick="doPrint()">ð¨ Print / PDF</button>
-        <button class="btn btn-json" onclick="doJson()">â JSON</button>
-        <button class="modal-close" onclick="closeModal()" title="Close">â</button>
+        <button class="btn btn-pdf" onclick="doPrint()">Print / PDF</button>
+        <button class="btn btn-json" onclick="doJson()">JSON</button>
+        <button class="modal-close" onclick="closeModal()" title="Close">&times;</button>
       </div>
     </div>
     <div class="modal-loading" id="modal-spin">
@@ -306,16 +306,16 @@ let PW = '';
 let ALL = [];
 let current = null;
 
-/* ââ helpers ââ */
+/* helpers */
 const fmtDate = d => d && d.length === 8
-  ? `${d.slice(4,6)}/${d.slice(6,8)}/${d.slice(0,4)}` : (d || 'â');
+  ? `${d.slice(4,6)}/${d.slice(6,8)}/${d.slice(0,4)}` : (d || '-');
 const fmtTime = t => {
-  if (!t || t.length !== 4) return t || 'â';
+  if (!t || t.length !== 4) return t || '-';
   const h = parseInt(t.slice(0,2)), m = t.slice(2);
   return `${h%12||12}:${m} ${h>=12?'PM':'AM'}`;
 };
 
-/* ââ auth ââ */
+/* auth */
 async function callApi(qs) {
   const r = await fetch(`${API}?${qs}`, { headers: { 'x-dashboard-password': PW } });
   return r;
@@ -328,7 +328,7 @@ async function unlock() {
   err.textContent = '';
   const r = await fetch(`${API}?action=list`, { headers: { 'x-dashboard-password': entered } });
   if (r.status === 401) { err.textContent = 'Incorrect password. Please try again.'; return; }
-  if (!r.ok) { err.textContent = 'Server error â check Netlify env vars.'; return; }
+  if (!r.ok) { err.textContent = 'Server error - check Netlify env vars.'; return; }
   PW = entered;
   sessionStorage.setItem('fs_pw', PW);
   ALL = await r.json();
@@ -345,7 +345,7 @@ document.getElementById('pw').addEventListener('keydown', e => { if (e.key === '
   if (r.ok) { PW = saved; ALL = await r.json(); boot(); }
 })();
 
-/* ââ boot ââ */
+/* boot */
 function boot() {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('app').style.display  = 'block';
@@ -355,7 +355,7 @@ function boot() {
   render();
 }
 
-/* ââ stats ââ */
+/* stats */
 function updateStats() {
   const sites = new Set(ALL.map(s => s.siteCode));
   document.getElementById('s-total').textContent = ALL.length;
@@ -367,7 +367,7 @@ function updateStats() {
   }
 }
 
-/* ââ table ââ */
+/* table */
 function render() {
   const q = document.getElementById('q').value.toLowerCase();
   const df = (document.getElementById('d-from').value || '').replace(/-/g,'');
@@ -399,7 +399,6 @@ function render() {
       </td>
     </tr>`).join('');
 
-  /* store filtered rows so index references work */
   window._rows = rows;
 }
 
@@ -414,12 +413,12 @@ function clearFilters() {
   render();
 }
 
-/* ââ survey view ââ */
+/* survey view */
 async function viewSurvey(idx) {
   const s = window._rows[idx];
   current = s;
   document.getElementById('modal-title').textContent =
-    `${s.siteCode} Â· ${fmtDate(s.date)} ${fmtTime(s.time)}`;
+    `${s.siteCode} - ${fmtDate(s.date)} ${fmtTime(s.time)}`;
   document.getElementById('modal').classList.add('open');
   document.getElementById('modal-spin').style.display = 'flex';
   const frame = document.getElementById('survey-frame');
@@ -434,7 +433,7 @@ async function viewSurvey(idx) {
       document.getElementById('modal-spin').style.display = 'none';
       frame.style.display = 'block';
     };
-    frame.src = URL.createObjectURI(blob);
+    frame.src = URL.createObjectURL(blob);
   } catch (e) {
     document.getElementById('modal-spin').innerHTML =
       `<p style="color:var(--red)">Error: ${esc(e.message)}</p>`;
@@ -465,8 +464,16 @@ async function dlJson(idx) {
 }
 
 /* modal toolbar */
-function doPrint() { if (current) printSurvey(null); }
-async function doJson()  { if (current) {
+async function doPrint() {
+  if (!current) return;
+  const r = await callApi(`action=get-html&path=${encodeURIComponent(current.htmlPath)}`);
+  const html = await r.text();
+  const w = window.open('','_blank');
+  w.document.write(html); w.document.close();
+  setTimeout(() => w.print(), 600);
+}
+async function doJson() {
+  if (!current) return;
   const r = await callApi(`action=get-json&path=${encodeURIComponent(current.jsonPath)}`);
   const text = await r.text();
   const a = Object.assign(document.createElement('a'), {
@@ -474,14 +481,6 @@ async function doJson()  { if (current) {
     download: current.filename
   });
   a.click();
-}}
-async function doPrintCurrent() {
-  if (!current) return;
-  const r = await callApi(`action=get-html&path=${encodeURIComponent(current.htmlPath)}`);
-  const html = await r.text();
-  const w = window.open('','_blank');
-  w.document.write(html); w.document.close();
-  setTimeout(() => w.print(), 600);
 }
 
 function closeModal() {
@@ -494,9 +493,6 @@ document.getElementById('modal').addEventListener('click', e => {
   if (e.target === document.getElementById('modal')) closeModal();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-/* fix doPrint to use current */
-window.doPrint = doPrintCurrent;
 </script>
 </body>
 </html>
