@@ -13,3 +13,8 @@
   from = "/.netlify/functions/submit-survey"
   to = "/.netlify/functions/submit-survey"
   status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/list-surveys"
+  to = "/.netlify/functions/list-surveys"
+  status = 200
