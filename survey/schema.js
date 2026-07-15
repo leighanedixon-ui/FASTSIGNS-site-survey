@@ -79,7 +79,7 @@
         {key:'metal_bars', label:'Does the door have horizontal metal bars?', type:'radio', options:YN, col:'1'},
         {key:'bar_measurements', label:'Bar measurements', type:'panels', col:'1',
           cols:[{key:'label',label:'Bar'},{key:'diameter',label:'Diameter'},{key:'spacing',label:'Spacing to next'}],
-          hint:'One row per bar, top to bottom.', reqIf:{field:'metal_bars', in:['Yes']}},
+          hint:'One row per bar, top to bottom.', req:true, show:{field:'metal_bars', in:['Yes']}},
         {key:'metal_bars_removable', label:'Are the bars removable?', type:'radio', options:YN, col:'1', show:{field:'metal_bars', in:['Yes']}},
         {key:'multi_same', label:'Are multiple doors the same style?', type:'radio', options:YN, col:'1'},
         {key:'multi_door_nos', label:'List all door numbers with this style', type:'textarea', col:'1', placeholder:'e.g. 101, 102, 103, 110…', hint:'One entry covers them all — list every door / dock # that matches.', show:{field:'multi_same', in:['Yes']}},
