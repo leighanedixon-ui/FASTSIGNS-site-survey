@@ -3,6 +3,7 @@
    date, photos, panels(repeater), signature, imgselect, reference, note, subhead
    Layout: col-1 (full), col-half, col-third
    show: {field, in:[...]} | {field, has:'x'}  conditional visibility within an item/group
+   reqIf: {field, in:[...]}  marks field required (shows *) only when condition is met
    panels cols: [{key,label,ph}]   (numeric unless key==='label')
 */
 (function(){
@@ -38,7 +39,7 @@
   const INFO = {
     id:'info', title:'Site Information',
     fields:[
-      {key:'site_code', label:'Site Code', type:'text', col:'half', req:true, placeholder:'e.g. AMZAVL02'},
+      {key:'site_code', label:'Site Code', type:'text', col:'half', req:true},
       {key:'survey_date', label:'Survey Date', type:'date', col:'half', req:true},
       {key:'street', label:'Street Address', type:'text', col:'1'},
       {key:'surveyor', label:'Surveyor Name / Company', type:'text', col:'1'},
@@ -76,10 +77,10 @@
           cols:[{key:'label',label:'Panel'},{key:'h',label:'Height'}],
           hint:'Required. Add each panel from top to bottom with its height. Measure the panel only — exclude the aluminum trim between panels.'},
         {key:'metal_bars', label:'Does the door have horizontal metal bars?', type:'radio', options:YN, col:'1'},
-        {key:'metal_bars_removable', label:'Are the bars removable?', type:'radio', options:YN, col:'1', show:{field:'metal_bars', in:['Yes']}},
-        {key:'bar_measurements', label:'Bar measurements (optional)', type:'panels', col:'1',
+        {key:'bar_measurements', label:'Bar measurements', type:'panels', col:'1',
           cols:[{key:'label',label:'Bar'},{key:'diameter',label:'Diameter'},{key:'spacing',label:'Spacing to next'}],
-          hint:'Not required — add if available. One row per bar, top to bottom.', show:{field:'metal_bars_removable', in:['Yes']}},
+          hint:'One row per bar, top to bottom.', reqIf:{field:'metal_bars', in:['Yes']}},
+        {key:'metal_bars_removable', label:'Are the bars removable?', type:'radio', options:YN, col:'1', show:{field:'metal_bars', in:['Yes']}},
         {key:'multi_same', label:'Are multiple doors the same style?', type:'radio', options:YN, col:'1'},
         {key:'multi_door_nos', label:'List all door numbers with this style', type:'textarea', col:'1', placeholder:'e.g. 101, 102, 103, 110…', hint:'One entry covers them all — list every door / dock # that matches.', show:{field:'multi_same', in:['Yes']}},
         {key:'damage', label:'Any damage that will impede installation?', type:'radio', options:YN, col:'1'},

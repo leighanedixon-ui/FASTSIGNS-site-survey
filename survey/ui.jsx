@@ -402,7 +402,7 @@ function NoteBox({noteType, text}){
 }
 
 /* ---------- generic field switch ---------- */
-function Field({field, value, onChange}){
+function Field({field, value, onChange, data}){
   if(field.type==='subhead') return <div className="field col-1" style={{marginTop:6}}>
     <div style={{fontSize:13,fontWeight:800,letterSpacing:'.03em',textTransform:'uppercase',color:'var(--muted-2)'}}>{field.label}</div>
   </div>;
@@ -424,8 +424,9 @@ function Field({field, value, onChange}){
     case 'signature': control=<SignaturePad value={value} onChange={onChange}/>; break;
     default: control=<TextField field={field} value={value} onChange={onChange}/>;
   }
+  const isReq = field.req || (field.reqIf && visible({show:field.reqIf}, data||{}));
   return <div className={"field "+colCls}>
-    <label className="flabel">{field.label}{field.req && <span className="req">*</span>}</label>
+    <label className="flabel">{field.label}{isReq && <span className="req">*</span>}</label>
     {field.hint && <div className="fhint">{field.hint}</div>}
     {control}
   </div>;
@@ -438,7 +439,7 @@ function FieldGrid({fields, data, onField}){
       if(f.show && !visible(f,data)) return null;
       if(!f.key && f.type!=='subhead' && f.type!=='note' && f.type!=='reference') return null;
       return <Field key={f.key||('x'+i)} field={f} value={f.key?data[f.key]:undefined}
-        onChange={v=>f.key && onField(f.key,v)} />;
+        onChange={v=>f.key && onField(f.key,v)} data={data} />;
     })}
   </div>;
 }
