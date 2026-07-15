@@ -8,6 +8,10 @@
 //   GITHUB_REPO    the surveys repo name                          (e.g. "site-surveys")
 //   GITHUB_BRANCH  optional, defaults to "main"
 //
+// Optional (confirmation email to the surveyor when filing):
+//   RESEND_API_KEY  API key from resend.com
+//   RESEND_FROM     verified sender, e.g. "Site Survey <survey@yourdomain.com>"
+//
 // Recommendation: point GITHUB_REPO at a SEPARATE repo from the one hosting this site,
 // so filing a survey never triggers a website rebuild.
 
@@ -32,11 +36,10 @@ export async function handler(event) {
   try { payload = JSON.parse(event.body || '{}'); }
   catch { return { statusCode: 400, headers: cors(), body: 'Bad JSON body' }; }
 
-  const { base, html, json } = payload;
+  const { base, html, json, surveyorEmail, surveyor, address, site } = payload;
   if (!base || !html) {
     return { statusCode: 400, headers: cors(), body: 'Missing "base" or "html".' };
-  }
-  // sanitise the path: only the surveys/ tree, no traversal
+  }  // sanitise the path: only the surveys/ tree, no traversal
   const safeBase = String(base).replace(/\.\.+/g, '').replace(/^\/+/, '');
   if (!safeBase.startsWith('surveys/')) {
     return { statusCode: 400, headers: cors(), body: 'Path must be under surveys/.' };
@@ -85,6 +88,10 @@ export async function handler(event) {
     const result = await commit(`${safeBase}.html`, html, `Site survey: ${safeBase}`);
     if (json) await commit(`${safeBase}.json`, json, `Site survey data: ${safeBase}`);
     const link = result && result.content && result.content.html_url;
+
+    // Best-effort confirmation email to the surveyor — never blocks filing on failure.
+    try { await sendConfirmationEmail({ surveyorEmail, surveyor, address, site: site || safeBase }, link); } catch (e) { /* swallow */ }
+
     return {
       statusCode: 200,
       headers: { ...cors(), 'Content-Type': 'application/json' },
@@ -97,6 +104,34 @@ export async function handler(event) {
       body: JSON.stringify({ ok: false, error: String(e.message || e) }),
     };
   }
+}
+
+// Sends a plain confirmation email via Resend (https://resend.com), if configured.
+// Required env vars: RESEND_API_KEY, RESEND_FROM (a verified sender, e.g. "Site Survey <survey@yourdomain.com>").
+async function sendConfirmationEmail(payload, recordLink) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM;
+  const to = payload.surveyorEmail;
+  if (!apiKey || !from || !to) return;
+
+  const site = payload.site || 'site';
+  const subject = `Site Survey filed — ${site}`;
+  const text = [
+    `Your site survey has been filed.`,
+    ``,
+    `Site: ${site}`,
+    payload.address ? `Address: ${payload.address}` : null,
+    payload.surveyor ? `Surveyor: ${payload.surveyor}` : null,
+    recordLink ? `Record: ${recordLink}` : null,
+    ``,
+    `You can look up all your filed surveys any time from the Site Survey app using this email address.`,
+  ].filter(Boolean).join('\n');
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from, to, subject, text }),
+  });
 }
 
 function cors() {
