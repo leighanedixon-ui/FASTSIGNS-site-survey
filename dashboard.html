@@ -154,9 +154,9 @@ tr:hover td { background: #FAFAFA; }
 .btn-json { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
 
 /* ── Export dropdown ── */
-.dd { position: relative; display: inline-block; }
+.dd { display: inline-block; }
 .dd-menu {
-  display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+  display: none; position: fixed; z-index: 300;
   background: var(--white); border: 1px solid var(--border); border-radius: 8px;
   box-shadow: var(--shadow-lg); min-width: 190px; overflow: hidden;
 }
@@ -305,14 +305,7 @@ tr:hover td { background: #FAFAFA; }
     <div class="modal-hd">
       <div class="modal-title" id="modal-title">Survey</div>
       <div class="modal-acts">
-        <div class="dd">
-          <button class="btn btn-pdf" onclick="toggleDD(event,'modal')">🖨 Export ▾</button>
-          <div class="dd-menu" id="dd-modal">
-            <button onclick="doPrint()">Full Survey (PDF)<span class="dd-hint">Text + all photos</span></button>
-            <button onclick="doSurveyOnly()">Survey Only (PDF)<span class="dd-hint">Text only, no photos</span></button>
-            <button onclick="doPhotos()">Photos (PDF)<span class="dd-hint">Full-size, by section</span></button>
-          </div>
-        </div>
+        <button class="btn btn-pdf" onclick="openDD(event,'modal')">🖨 Export ▾</button>
         <button class="btn btn-json" onclick="doJson()">⬇ JSON</button>
         <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
       </div>
@@ -323,6 +316,13 @@ tr:hover td { background: #FAFAFA; }
     </div>
     <iframe id="survey-frame" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
   </div>
+</div>
+
+<!-- ── Export dropdown (single shared portal, repositioned per click) ── -->
+<div class="dd-menu" id="dd-portal">
+  <button id="dd-full">Full Survey (PDF)<span class="dd-hint">Text + all photos</span></button>
+  <button id="dd-survey">Survey Only (PDF)<span class="dd-hint">Text only, no photos</span></button>
+  <button id="dd-photos">Photos (PDF)<span class="dd-hint">Full-size, by section</span></button>
 </div>
 
 <script>
@@ -422,14 +422,7 @@ function render() {
       <td><span class="fn" title="${esc(s.nameWithoutExt)}">${esc(s.nameWithoutExt)}</span></td>
       <td class="acts">
         <button class="btn btn-view" onclick="viewSurvey(${i})">View</button>
-        <div class="dd">
-          <button class="btn btn-pdf" onclick="toggleDD(event,${i})">Export ▾</button>
-          <div class="dd-menu" id="dd-${i}">
-            <button onclick="exportFull(${i})">Full Survey (PDF)<span class="dd-hint">Text + all photos</span></button>
-            <button onclick="exportSurveyOnly(${i})">Survey Only (PDF)<span class="dd-hint">Text only, no photos</span></button>
-            <button onclick="exportPhotos(${i})">Photos (PDF)<span class="dd-hint">Full-size, by section</span></button>
-          </div>
-        </div>
+        <button class="btn btn-pdf" onclick="openDD(event,${i})">Export ▾</button>
         <button class="btn btn-json" onclick="dlJson(${i})">JSON</button>
       </td>
     </tr>`).join('');
@@ -445,17 +438,52 @@ function clearFilters() {
   render();
 }
 
-/* ── export dropdown ── */
-function toggleDD(e, key) {
+/* ── export dropdown (fixed-position portal, avoids clipping inside the
+   scrolling table card) ── */
+function openDD(e, target) {
   e.stopPropagation();
-  document.querySelectorAll('.dd-menu.open').forEach(m => {
-    if (m.id !== 'dd-' + key) m.classList.remove('open');
-  });
-  const menu = document.getElementById('dd-' + key);
-  if (menu) menu.classList.toggle('open');
+  const btn = e.currentTarget;
+  const menu = document.getElementById('dd-portal');
+  const wasOpenForThis = menu.classList.contains('open') && menu.dataset.target === String(target);
+
+  if (wasOpenForThis) {
+    menu.classList.remove('open');
+    return;
+  }
+
+  const getRecord = () => (target === 'modal' ? current : (window._rows || [])[target]);
+  const runExport = fn => {
+    const s = getRecord();
+    if (s) fn(s).catch(err => alert('Export failed: ' + err.message));
+    menu.classList.remove('open');
+  };
+  document.getElementById('dd-full').onclick   = () => runExport(exportFullFor);
+  document.getElementById('dd-survey').onclick = () => runExport(exportSurveyOnlyFor);
+  document.getElementById('dd-photos').onclick = () => runExport(exportPhotosFor);
+
+  menu.dataset.target = String(target);
+  menu.classList.add('open');
+
+  /* position under the button, flipped above if there's no room below,
+     and kept clear of the right edge of the viewport */
+  const rect = btn.getBoundingClientRect();
+  const menuH = menu.offsetHeight || 150;
+  const menuW = menu.offsetWidth || 190;
+  let top = rect.bottom + 4;
+  if (top + menuH > window.innerHeight) top = Math.max(8, rect.top - menuH - 4);
+  let left = rect.left;
+  if (left + menuW > window.innerWidth) left = Math.max(8, window.innerWidth - menuW - 8);
+  menu.style.top = top + 'px';
+  menu.style.left = left + 'px';
 }
 document.addEventListener('click', () => {
-  document.querySelectorAll('.dd-menu.open').forEach(m => m.classList.remove('open'));
+  document.getElementById('dd-portal').classList.remove('open');
+});
+window.addEventListener('scroll', () => {
+  document.getElementById('dd-portal').classList.remove('open');
+}, true);
+window.addEventListener('resize', () => {
+  document.getElementById('dd-portal').classList.remove('open');
 });
 
 /* ── survey view ── */
@@ -577,16 +605,6 @@ async function exportPhotosFor(s) {
 
   openAndPrint(out);
 }
-
-/* row-index wrappers (table Actions column) */
-function exportFull(idx)        { exportFullFor(window._rows[idx]).catch(e => alert('Export failed: ' + e.message)); }
-function exportSurveyOnly(idx)  { exportSurveyOnlyFor(window._rows[idx]).catch(e => alert('Export failed: ' + e.message)); }
-function exportPhotos(idx)      { exportPhotosFor(window._rows[idx]).catch(e => alert('Export failed: ' + e.message)); }
-
-/* current-record wrappers (modal toolbar) */
-function doPrint()       { if (current) exportFullFor(current).catch(e => alert('Export failed: ' + e.message)); }
-function doSurveyOnly()  { if (current) exportSurveyOnlyFor(current).catch(e => alert('Export failed: ' + e.message)); }
-function doPhotos()      { if (current) exportPhotosFor(current).catch(e => alert('Export failed: ' + e.message)); }
 
 async function dlJson(idx) {
   const s = window._rows ? window._rows[idx] : current;
