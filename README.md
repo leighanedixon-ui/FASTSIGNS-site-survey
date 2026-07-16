@@ -110,24 +110,45 @@ file; **Reopen to edit** re-locks Send & PDF until completed again.
 
 ---
 
-## Planned dashboard improvements (not yet built)
+## Dashboard improvements
 
-### 1. Email notifications
-Automated alerts to **leighane.dixon@fastsigns.com** and **david.campbell@fastsigns.com**
-on dashboard events (new survey submitted, status change).
-- Add both addresses to notification config — Netlify Site Settings → Notifications,
-  or as env vars if routed through a backend mailer (SendGrid/Nodemailer/Resend).
-- Decide trigger events: submission, new entry, export completed.
-- Consider an admin UI field to manage recipients without a redeploy.
+### 1. Email notifications — planned, not yet built
 
-### 2. PDF export — flexible photo options
-Export button becomes a dropdown with three options:
-- **Download Full Survey (PDF)** — text, fields, metadata, embedded photos (current behavior).
-- **Download Survey Only (PDF)** — text, fields, metadata; no images. Filename: `Survey_SiteID_Date.pdf`.
-- **Download Photos (PDF)** — photos only, grouped under section-label headers (e.g.
-  "Section: Exterior Signage", "Section: Interior — Lobby", "Section: Damaged Areas"),
-  in the same order as the survey's sections. Header/footer carries survey ID, site
-  name, and date. Filename: `Photos_SiteID_Date.pdf`.
+**Goal:** send automated email alerts to specified recipients for relevant dashboard
+events (e.g., new survey submitted, survey status change).
 
-Implementation: a PDF library with conditional rendering (pdf-lib, pdfmake, or
-Puppeteer); section labels pull from the existing survey section/field names.
+**Recipients to configure:**
+- leighane.dixon@fastsigns.com
+- david.campbell@fastsigns.com
+
+**Implementation notes:**
+- Add both addresses to the notification config — Netlify → Site Settings →
+  Notifications, or via environment variables if using a backend email service such
+  as SendGrid/Nodemailer.
+- Confirm which trigger events should send notifications (e.g., form submission, new
+  survey entry, export completed).
+- Consider an admin UI field in the dashboard to manage recipient emails without
+  redeployment.
+
+### 2. PDF export — flexible photo options — implemented
+
+**Goal:** give users two export options — a standard full export (with photos) and a
+split export where photos are a separate labeled file.
+
+The export control (per survey row, and in the survey viewer) is a dropdown with:
+- **Download Full Survey (PDF)** — all text responses, form fields, metadata, and
+  embedded photos (original/default behavior).
+- **Download Survey Only (PDF)** — text responses, form fields, and metadata only; no
+  photos. Filename: `Survey_SiteID_Date.pdf`.
+- **Download Photos (PDF)** — photos exported separately. Each group is preceded by a
+  section-label header pulled from the survey's own section/item names (e.g. "Section:
+  STG Dock Doors", with each entry's name as a sub-caption), in the same order as the
+  survey's sections. Survey ID, site, and date appear in the header and footer.
+  Filename: `Photos_SiteID_Date.pdf`.
+
+**Implementation:** built client-side in `dashboard.html` — the filed survey's HTML
+(already fetched for View / Full Survey PDF) is parsed and reassembled per export
+type: photos and signature stripped out for Survey Only; grouped by section/item for
+Photos Only. Each opens in a new tab and hands off to the browser's print dialog for
+Save as PDF — the same no-backend approach the rest of the dashboard uses, rather than
+adding a server-side PDF library (pdf-lib, pdfmake, or Puppeteer).

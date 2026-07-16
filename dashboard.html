@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FASTSIGNS - Survey Dashboard</title>
+<title>FASTSIGNS · Survey Dashboard</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
 }
 
-/* --- Gate --- */
+/* ── Gate ── */
 #gate {
   position: fixed; inset: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
@@ -58,7 +58,7 @@ body {
 .gate-btn:hover { opacity: .88; }
 .gate-err { color: var(--red); font-size: .8rem; margin-top: .75rem; min-height: 1.1em; }
 
-/* --- Header --- */
+/* ── Header ── */
 header {
   background: var(--dark);
   padding: .875rem 2rem;
@@ -69,7 +69,7 @@ header {
 .hd-logo em { color: var(--red); font-style: normal; }
 .hd-date { font-size: .78rem; color: rgba(255,255,255,.45); }
 
-/* --- Stats --- */
+/* ── Stats ── */
 .stats {
   display: grid; grid-template-columns: repeat(3,1fr); gap: .875rem;
   padding: 1.5rem 2rem 1rem;
@@ -82,7 +82,7 @@ header {
 .stat-val { font-size: 2rem; font-weight: 800; color: var(--dark); line-height: 1.15; }
 .stat-sub { font-size: .72rem; color: var(--gray); margin-top: .2rem; }
 
-/* --- Controls --- */
+/* ── Controls ── */
 .controls {
   padding: 0 2rem .875rem;
   display: flex; gap: .625rem; flex-wrap: wrap; align-items: center;
@@ -114,7 +114,7 @@ input.date-input:focus { border-color: var(--red); }
 }
 .btn-clear:hover { border-color: var(--red); color: var(--red); }
 
-/* --- Table --- */
+/* ── Table ── */
 .tbl-wrap { padding: 0 2rem 2rem; }
 .tbl-card {
   background: var(--white); border-radius: 10px;
@@ -142,7 +142,7 @@ tr:hover td { background: #FAFAFA; }
 .dt { font-weight: 600; }
 .tm { color: var(--gray); }
 .fn { color: #9CA3AF; font-size: .78rem; font-family: monospace; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.acts { display: flex; gap: .4rem; }
+.acts { display: flex; gap: .4rem; align-items: center; }
 .btn {
   padding: .3rem .65rem; border-radius: 5px;
   font-size: .75rem; font-weight: 700; cursor: pointer; border: none;
@@ -153,7 +153,25 @@ tr:hover td { background: #FAFAFA; }
 .btn-pdf  { background: var(--red);  color: white; }
 .btn-json { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
 
-/* --- Empty / Loading --- */
+/* ── Export dropdown ── */
+.dd { position: relative; display: inline-block; }
+.dd-menu {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: var(--shadow-lg); min-width: 190px; overflow: hidden;
+}
+.dd-menu.open { display: block; }
+.dd-menu button {
+  display: block; width: 100%; text-align: left;
+  padding: .6rem .8rem; font-size: .8rem; font-weight: 600;
+  background: none; border: none; cursor: pointer; color: var(--dark);
+  border-bottom: 1px solid var(--border);
+}
+.dd-menu button:last-child { border-bottom: none; }
+.dd-menu button:hover { background: var(--light); color: var(--red); }
+.dd-menu .dd-hint { display: block; font-size: .68rem; font-weight: 500; color: var(--gray); margin-top: .1rem; }
+
+/* ── Empty / Loading ── */
 .empty td { text-align: center; padding: 3rem; color: var(--gray); }
 .spin {
   width: 28px; height: 28px; margin: 0 auto .875rem;
@@ -162,7 +180,7 @@ tr:hover td { background: #FAFAFA; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- Modal --- */
+/* ── Modal ── */
 #modal {
   display: none; position: fixed; inset: 0; z-index: 100;
   background: rgba(0,0,0,.55);
@@ -194,7 +212,7 @@ tr:hover td { background: #FAFAFA; }
 }
 #survey-frame { flex: 1; border: none; width: 100%; display: none; }
 
-/* --- Responsive --- */
+/* ── Responsive ── */
 @media (max-width: 680px) {
   .stats { grid-template-columns: 1fr 1fr; }
   header, .stats, .controls, .tbl-wrap { padding-left: 1rem; padding-right: 1rem; }
@@ -208,7 +226,7 @@ tr:hover td { background: #FAFAFA; }
 </head>
 <body>
 
-<!-- Password Gate -->
+<!-- ── Password Gate ── -->
 <div id="gate">
   <div class="gate-card">
     <div class="gate-wordmark">FASTSIGNS</div>
@@ -219,7 +237,7 @@ tr:hover td { background: #FAFAFA; }
   </div>
 </div>
 
-<!-- App -->
+<!-- ── App ── -->
 <div id="app" style="display:none">
   <header>
     <div class="hd-logo"><em>FAST</em>SIGNS &middot; Survey Dashboard</div>
@@ -249,7 +267,7 @@ tr:hover td { background: #FAFAFA; }
       <svg class="search-ico" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="7"/><path d="m21 21-4.5-4.5"/>
       </svg>
-      <input id="q" type="text" class="ctrl-input" placeholder="Search site code..." oninput="render()" />
+      <input id="q" type="text" class="ctrl-input" placeholder="Search site code…" oninput="render()" />
     </div>
     <input id="d-from" type="date" class="date-input" onchange="render()" title="From date" />
     <input id="d-to"   type="date" class="date-input" onchange="render()" title="To date" />
@@ -281,15 +299,22 @@ tr:hover td { background: #FAFAFA; }
   </div>
 </div>
 
-<!-- Survey Modal -->
+<!-- ── Survey Modal ── -->
 <div id="modal">
   <div class="modal-card">
     <div class="modal-hd">
       <div class="modal-title" id="modal-title">Survey</div>
       <div class="modal-acts">
-        <button class="btn btn-pdf" onclick="doPrint()">Print / PDF</button>
-        <button class="btn btn-json" onclick="doJson()">JSON</button>
-        <button class="modal-close" onclick="closeModal()" title="Close">&times;</button>
+        <div class="dd">
+          <button class="btn btn-pdf" onclick="toggleDD(event,'modal')">🖨 Export ▾</button>
+          <div class="dd-menu" id="dd-modal">
+            <button onclick="doPrint()">Full Survey (PDF)<span class="dd-hint">Text + all photos</span></button>
+            <button onclick="doSurveyOnly()">Survey Only (PDF)<span class="dd-hint">Text only, no photos</span></button>
+            <button onclick="doPhotos()">Photos (PDF)<span class="dd-hint">Full-size, by section</span></button>
+          </div>
+        </div>
+        <button class="btn btn-json" onclick="doJson()">⬇ JSON</button>
+        <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
       </div>
     </div>
     <div class="modal-loading" id="modal-spin">
@@ -306,16 +331,19 @@ let PW = '';
 let ALL = [];
 let current = null;
 
-/* helpers */
+/* ── helpers ── */
 const fmtDate = d => d && d.length === 8
-  ? `${d.slice(4,6)}/${d.slice(6,8)}/${d.slice(0,4)}` : (d || '-');
+  ? `${d.slice(4,6)}/${d.slice(6,8)}/${d.slice(0,4)}` : (d || '—');
 const fmtTime = t => {
-  if (!t || t.length !== 4) return t || '-';
+  if (!t || t.length !== 4) return t || '—';
   const h = parseInt(t.slice(0,2)), m = t.slice(2);
   return `${h%12||12}:${m} ${h>=12?'PM':'AM'}`;
 };
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
-/* auth */
+/* ── auth ── */
 async function callApi(qs) {
   const r = await fetch(`${API}?${qs}`, { headers: { 'x-dashboard-password': PW } });
   return r;
@@ -328,7 +356,7 @@ async function unlock() {
   err.textContent = '';
   const r = await fetch(`${API}?action=list`, { headers: { 'x-dashboard-password': entered } });
   if (r.status === 401) { err.textContent = 'Incorrect password. Please try again.'; return; }
-  if (!r.ok) { err.textContent = 'Server error - check Netlify env vars.'; return; }
+  if (!r.ok) { err.textContent = 'Server error — check Netlify env vars.'; return; }
   PW = entered;
   sessionStorage.setItem('fs_pw', PW);
   ALL = await r.json();
@@ -345,7 +373,7 @@ document.getElementById('pw').addEventListener('keydown', e => { if (e.key === '
   if (r.ok) { PW = saved; ALL = await r.json(); boot(); }
 })();
 
-/* boot */
+/* ── boot ── */
 function boot() {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('app').style.display  = 'block';
@@ -355,7 +383,7 @@ function boot() {
   render();
 }
 
-/* stats */
+/* ── stats ── */
 function updateStats() {
   const sites = new Set(ALL.map(s => s.siteCode));
   document.getElementById('s-total').textContent = ALL.length;
@@ -367,7 +395,7 @@ function updateStats() {
   }
 }
 
-/* table */
+/* ── table ── */
 function render() {
   const q = document.getElementById('q').value.toLowerCase();
   const df = (document.getElementById('d-from').value || '').replace(/-/g,'');
@@ -394,16 +422,20 @@ function render() {
       <td><span class="fn" title="${esc(s.nameWithoutExt)}">${esc(s.nameWithoutExt)}</span></td>
       <td class="acts">
         <button class="btn btn-view" onclick="viewSurvey(${i})">View</button>
-        <button class="btn btn-pdf"  onclick="printSurvey(${i})">PDF</button>
+        <div class="dd">
+          <button class="btn btn-pdf" onclick="toggleDD(event,${i})">Export ▾</button>
+          <div class="dd-menu" id="dd-${i}">
+            <button onclick="exportFull(${i})">Full Survey (PDF)<span class="dd-hint">Text + all photos</span></button>
+            <button onclick="exportSurveyOnly(${i})">Survey Only (PDF)<span class="dd-hint">Text only, no photos</span></button>
+            <button onclick="exportPhotos(${i})">Photos (PDF)<span class="dd-hint">Full-size, by section</span></button>
+          </div>
+        </div>
         <button class="btn btn-json" onclick="dlJson(${i})">JSON</button>
       </td>
     </tr>`).join('');
 
+  /* store filtered rows so index references work */
   window._rows = rows;
-}
-
-function esc(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function clearFilters() {
@@ -413,12 +445,25 @@ function clearFilters() {
   render();
 }
 
-/* survey view */
+/* ── export dropdown ── */
+function toggleDD(e, key) {
+  e.stopPropagation();
+  document.querySelectorAll('.dd-menu.open').forEach(m => {
+    if (m.id !== 'dd-' + key) m.classList.remove('open');
+  });
+  const menu = document.getElementById('dd-' + key);
+  if (menu) menu.classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dd-menu.open').forEach(m => m.classList.remove('open'));
+});
+
+/* ── survey view ── */
 async function viewSurvey(idx) {
   const s = window._rows[idx];
   current = s;
   document.getElementById('modal-title').textContent =
-    `${s.siteCode} - ${fmtDate(s.date)} ${fmtTime(s.time)}`;
+    `${s.siteCode} · ${fmtDate(s.date)} ${fmtTime(s.time)}`;
   document.getElementById('modal').classList.add('open');
   document.getElementById('modal-spin').style.display = 'flex';
   const frame = document.getElementById('survey-frame');
@@ -440,16 +485,108 @@ async function viewSurvey(idx) {
   }
 }
 
-async function printSurvey(idx) {
-  const s = window._rows ? window._rows[idx] : current;
-  if (!s) return;
+/* ── shared export helpers ── */
+async function fetchSurveyHtml(s) {
   const r = await callApi(`action=get-html&path=${encodeURIComponent(s.htmlPath)}`);
-  const html = await r.text();
-  const w = window.open('','_blank');
-  w.document.write(html);
+  if (!r.ok) throw new Error(await r.text());
+  return r.text();
+}
+
+function openAndPrint(htmlString) {
+  const w = window.open('', '_blank');
+  w.document.write(htmlString);
   w.document.close();
   setTimeout(() => w.print(), 600);
 }
+
+/* Full Survey — unchanged behavior: exact filed snapshot, printed as-is */
+async function exportFullFor(s) {
+  const html = await fetchSurveyHtml(s);
+  openAndPrint(html);
+}
+
+/* Survey Only — same snapshot with all photo blocks & signature stripped out */
+async function exportSurveyOnlyFor(s) {
+  const html = await fetchSurveyHtml(s);
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.querySelectorAll('.photos').forEach(el => el.remove());
+  doc.querySelectorAll('.sig').forEach(el => el.remove());
+  doc.title = `Survey_${s.siteCode || 'site'}_${s.date || ''}`;
+  openAndPrint('<!DOCTYPE html>' + doc.documentElement.outerHTML);
+}
+
+/* Photos Only — photos pulled out of the snapshot, grouped by the survey's own
+   section (h3) and item (h4) labels, rendered full-size with a header/footer
+   carrying survey ID, site, and date. */
+function extractPhotoGroups(doc) {
+  const groups = [];
+  doc.querySelectorAll('.doc > section').forEach(sec => {
+    const h3 = sec.querySelector(':scope > h3');
+    const label = h3 ? h3.textContent : 'Photos';
+    const entries = [];
+    sec.querySelectorAll(':scope > .item').forEach(it => {
+      const h4 = it.querySelector(':scope > h4');
+      const subLabel = h4 ? h4.textContent : '';
+      const imgs = Array.from(it.querySelectorAll(':scope > .photos img')).map(img => img.getAttribute('src'));
+      if (imgs.length) entries.push({ subLabel, imgs });
+    });
+    const directImgs = Array.from(sec.querySelectorAll(':scope > .photos img')).map(img => img.getAttribute('src'));
+    if (directImgs.length) entries.push({ subLabel: '', imgs: directImgs });
+    if (entries.length) groups.push({ label, entries });
+  });
+  return groups;
+}
+
+async function exportPhotosFor(s) {
+  const html = await fetchSurveyHtml(s);
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const bannerH1 = (doc.querySelector('.banner h1') || {}).textContent || 'Site Survey';
+  const bannerP  = (doc.querySelector('.banner p')  || {}).textContent || '';
+  const groups = extractPhotoGroups(doc);
+  const title = `Photos_${s.siteCode || 'site'}_${s.date || ''}`;
+
+  const body = groups.map(g => {
+    const entries = g.entries.map(e => {
+      const cap = e.subLabel ? `<div class="ph-cap">${esc(e.subLabel)}</div>` : '';
+      const imgs = e.imgs.map(src => `<img src="${src}"/>`).join('');
+      return `<div class="ph-entry">${cap}${imgs}</div>`;
+    }).join('');
+    return `<div class="ph-group"><div class="ph-sec">Section: ${esc(g.label)}</div>${entries}</div>`;
+  }).join('') || '<p style="padding:0 0 20px;color:#6B7280">No photos in this survey.</p>';
+
+  const css = `
+    *{box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#231F20;margin:0;padding:28px 34px}
+    .ph-header{border-bottom:3px solid #E31837;padding-bottom:14px;margin-bottom:22px}
+    .ph-header h1{margin:0 0 4px;font-size:19px}
+    .ph-header p{margin:0;font-size:12px;color:#6B7280}
+    .ph-group{margin-bottom:26px}
+    .ph-sec{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#E31837;border-bottom:1px solid #E5E7EB;padding-bottom:6px;margin-bottom:14px}
+    .ph-entry{margin-bottom:18px;break-inside:avoid;page-break-inside:avoid}
+    .ph-cap{font-size:12px;font-weight:700;color:#374151;margin-bottom:6px}
+    .ph-entry img{width:100%;max-height:9in;object-fit:contain;border:1px solid #E5E7EB;border-radius:8px;margin-bottom:6px;display:block}
+    .ph-footer{margin-top:14px;padding-top:14px;border-top:1px solid #E5E7EB;font-size:11px;color:#9CA3AF}
+    @media print{ .ph-entry{break-inside:avoid} }
+  `;
+
+  const out = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${esc(title)}</title><style>${css}</style></head><body>
+    <div class="ph-header"><h1>${esc(bannerH1)}</h1><p>${esc(bannerP)}</p></div>
+    ${body}
+    <div class="ph-footer">${esc(bannerP)}</div>
+  </body></html>`;
+
+  openAndPrint(out);
+}
+
+/* row-index wrappers (table Actions column) */
+function exportFull(idx)        { exportFullFor(window._rows[idx]).catch(e => alert('Export failed: ' + e.message)); }
+function exportSurveyOnly(idx)  { exportSurveyOnlyFor(window._rows[idx]).catch(e => alert('Export failed: ' + e.message)); }
+function exportPhotos(idx)      { exportPhotosFor(window._rows[idx]).catch(e => alert('Export failed: ' + e.message)); }
+
+/* current-record wrappers (modal toolbar) */
+function doPrint()       { if (current) exportFullFor(current).catch(e => alert('Export failed: ' + e.message)); }
+function doSurveyOnly()  { if (current) exportSurveyOnlyFor(current).catch(e => alert('Export failed: ' + e.message)); }
+function doPhotos()      { if (current) exportPhotosFor(current).catch(e => alert('Export failed: ' + e.message)); }
 
 async function dlJson(idx) {
   const s = window._rows ? window._rows[idx] : current;
@@ -463,21 +600,12 @@ async function dlJson(idx) {
   a.click();
 }
 
-/* modal toolbar */
-async function doPrint() {
-  if (!current) return;
-  const r = await callApi(`action=get-html&path=${encodeURIComponent(current.htmlPath)}`);
-  const html = await r.text();
-  const w = window.open('','_blank');
-  w.document.write(html); w.document.close();
-  setTimeout(() => w.print(), 600);
-}
 async function doJson() {
   if (!current) return;
   const r = await callApi(`action=get-json&path=${encodeURIComponent(current.jsonPath)}`);
   const text = await r.text();
   const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(new Blob([text], {type:'application/json'})),
+    href: URL.createObjectURL(new Blob([text], { type:'application/json' })),
     download: current.filename
   });
   a.click();
